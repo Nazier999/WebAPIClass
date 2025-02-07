@@ -1,0 +1,4 @@
+the user will register an account 
+the user will then log in 
+if that user isAuthenticated they can manage the list of favorites
+the user can logout using the logout button
