@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Favorite</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("add-favorite-form");
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                const favoriteName = document.getElementById("favoritename").value.trim();
+                if (!favoriteName) {
+                    alert("Favorite cannot be empty.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("/favorites", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ FavoriteThing: favoriteName }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to add favorite");
+                    }
+
+                    alert("Favorite added successfully!");
+                    window.location.href = "index.html"; // Redirect to index
+                } catch (error) {
+                    console.error("Error adding favorite:", error);
+                    alert("Error adding favorite. Please try again.");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Add Favorite</h1>
+    <a href="index.html">Back to List</a>
+    <br>
+    <form id="add-favorite-form">
+        <label for="favoritename">Favorite Name</label>
+        <input type="text" name="FavoriteThing" id="favoritename" required>
+        <br>
+        <button type="submit">Add Favorite</button>
+    </form>
+</body>
+</html>
