@@ -15,11 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret:"12345",
+    secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:false,
     cookie:{secure:false}// Set to true is using https
-}));
+  }));
 app.use(express.static("public"));
 
 // Serve static files
