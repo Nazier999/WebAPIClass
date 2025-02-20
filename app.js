@@ -6,12 +6,13 @@ const Favorite = require("./HW1/models/favorite");
 const bcrypt = require("bcryptjs");
 const User = require("./HW1/models/users");
 const app = express();
+const bodyParser = require("body-parser");
 const port = process.env.port || 3000;
 require("dotenv").config();
-
+const { register } = require("module");
 //mongodb+srv://nazierjlacy:Falcon#1@webapi.crv0o.mongodb.net/
 // Middleware to parse incoming requests
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
