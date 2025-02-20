@@ -1,37 +1,55 @@
-const express = require("express");
-const session = require("express-session");
-const path = require("path");
-const mongoose = require("mongoose");
-const Favorite = require("./HW1/models/favorite");
-const bcrypt = require("bcryptjs");
-const User = require("./HW1/models/users");
-const app = express();
-const bodyParser = require("body-parser");
-const port = process.env.port || 3000;
 require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const path = require("path");
+const session = require("express-session");
+const bcrypt = require("bcryptjs");
+const FavoriteThings = require("./HW1/models/favorite");
+const User = require("./HW1/models/users");
 const { register } = require("module");
-//mongodb+srv://nazierjlacy:Falcon#1@webapi.crv0o.mongodb.net/
-// Middleware to parse incoming requests
+
+const app = express();
+const port = process.env.port || 3000;
+
+
+/*// MongoDB connection setup
+const mongoURI = "mongodb://localhost:27017/crudapp";
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error"));
+db.once("open", () => {
+  console.log("Connected to MongoDB Database");
+});
+
+//random junk to save the repo
+
+*/
+// Middleware to serve static files
+app.use(express.static(path.join(__dirname, "public")));
+
+// Middleware to parse JSON requests
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
+//sets up the session variable
 app.use(session({
-    secret:process.env.SESSION_SECRET,
-    resave:false,
-    saveUninitialized:false,
-    cookie:{secure:false}// Set to true is using https
-  }));
-app.use(express.static("public"));
+  secret:process.env.SESSION_SECRET,
+  resave:false,
+  saveUninitialized:false,
+  cookie:{secure:false}// Set to true is using https
+}));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "HW1")));
-
-function isAuthenticated(req,res, next){
-    if(req.session.user)return next();
-    return res.redirect("/login");
+// Authentication middleware
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  }
+  return res.redirect("/login");
 }
 
-// MongoDB connection setup
+//MongoDB connection setup
 const mongoURI = process.env.MONGODB_URI;//"mongodb://localhost:27017/crudapp";
 mongoose.connect(mongoURI);
 
@@ -40,12 +58,6 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error"));
 db.once("open", ()=>{
     console.log("Connected to MongoDB Database");
-});
-
-
-mongoose.connect(mongoURI, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
 });
 
 // Routes
