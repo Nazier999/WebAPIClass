@@ -27,7 +27,7 @@ db.once("open", () => {
 
 */
 // Middleware to serve static files
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "HW1")));
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
