@@ -6,9 +6,10 @@ const Favorite = require("./HW1/models/favorite");
 const bcrypt = require("bcryptjs");
 const User = require("./HW1/models/users");
 const app = express();
-const port = 3000;
+const port = process.env.port || 3000;
+require("dotenv").config();
 
-
+//mongodb+srv://nazierjlacy:Falcon#1@webapi.crv0o.mongodb.net/
 // Middleware to parse incoming requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,15 +31,15 @@ function isAuthenticated(req,res, next){
 }
 
 // MongoDB connection setup
-const mongoURI = "mongodb://localhost:27017/Crudapp";
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const mongoURI = process.env.MONGODB_URI;//"mongodb://localhost:27017/crudapp";
+mongoose.connect(mongoURI);
 
 const db = mongoose.connection;
+
 db.on("error", console.error.bind(console, "MongoDB connection error"));
-db.once("open", () => {
+db.once("open", ()=>{
     console.log("Connected to MongoDB Database");
 });
-
 
 
 mongoose.connect(mongoURI, { 
@@ -215,3 +216,6 @@ app.delete("/favorites/:id", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+module.exports = app;
